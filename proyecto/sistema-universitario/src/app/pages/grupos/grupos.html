@@ -1,0 +1,95 @@
+<h2>Grupos</h2>
+
+<form
+  class="formulario-grupo"
+  (ngSubmit)="guardarGrupo()"
+>
+
+  <input
+    type="text"
+    placeholder="Número de grupo"
+    name="num_g"
+    [(ngModel)]="nuevoGrupo.num_g"
+    [readonly]="editando"
+    required
+  >
+
+  <input
+    type="time"
+    name="horario"
+    [(ngModel)]="nuevoGrupo.horario"
+  >
+
+  <input
+    type="text"
+    placeholder="Salón"
+    name="salon"
+    [(ngModel)]="nuevoGrupo.salon"
+  >
+
+  <input
+    type="number"
+    placeholder="Cupo"
+    name="cupo"
+    [(ngModel)]="nuevoGrupo.cupo"
+    min="0"
+  >
+
+  <button type="submit">
+    {{ editando ? 'Guardar cambios' : 'Agregar grupo' }}
+  </button>
+
+  <button
+    *ngIf="editando"
+    type="button"
+    (click)="cancelarEdicion()"
+  >
+    Cancelar
+  </button>
+
+</form>
+
+<table>
+
+  <thead>
+    <tr>
+      <th>Grupo</th>
+      <th>Horario</th>
+      <th>Salón</th>
+      <th>Cupo</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let grupo of grupos">
+
+      <td>{{ grupo.num_g }}</td>
+      <td>{{ grupo.horario }}</td>
+      <td>{{ grupo.salon }}</td>
+      <td>{{ grupo.cupo }}</td>
+
+      <td>
+
+        <button
+          type="button"
+          (click)="editarGrupo(grupo)"
+        >
+          Editar
+        </button>
+
+        <button
+          type="button"
+          (click)="eliminarGrupo(grupo.num_g)"
+        >
+          Eliminar
+        </button>
+
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>

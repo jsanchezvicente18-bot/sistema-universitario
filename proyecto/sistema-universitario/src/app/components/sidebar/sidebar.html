@@ -1,0 +1,78 @@
+<aside class="sidebar">
+
+  <div class="brand">
+    <div class="brand-icon">
+      SU
+    </div>
+
+    <div class="brand-text">
+      <strong>Sistema</strong>
+      <span>Universitario</span>
+    </div>
+  </div>
+
+  <nav class="menu">
+
+    <a
+      routerLink="/inicio"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="menu-item">
+
+      <span class="icon">⌂</span>
+      <span>Inicio</span>
+
+    </a>
+
+    <div class="menu-title">
+      GESTIÓN ACADÉMICA
+    </div>
+
+    <a
+      routerLink="/aperturas"
+      routerLinkActive="active"
+      class="menu-item">
+
+      <span class="icon">▣</span>
+      <span>Aperturas</span>
+
+    </a>
+
+    <a
+      routerLink="/asignaturas"
+      routerLinkActive="active"
+      class="menu-item">
+
+      <span class="icon">▤</span>
+      <span>Asignaturas</span>
+
+    </a>
+
+    <a
+      routerLink="/grupos"
+      routerLinkActive="active"
+      class="menu-item">
+
+      <span class="icon">▦</span>
+      <span>Grupos</span>
+
+    </a>
+
+    <a
+      routerLink="/profesores"
+      routerLinkActive="active"
+      class="menu-item">
+
+      <span class="icon">♙</span>
+      <span>Profesores</span>
+
+    </a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <span class="status-dot"></span>
+    Sistema activo
+  </div>
+
+</aside>

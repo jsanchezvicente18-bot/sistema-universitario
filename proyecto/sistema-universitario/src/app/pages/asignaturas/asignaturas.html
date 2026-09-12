@@ -1,0 +1,89 @@
+<h2>Asignaturas</h2>
+
+<form
+  class="formulario-asignatura"
+  (ngSubmit)="guardarAsignatura()"
+>
+
+  <input
+    type="text"
+    placeholder="Clave"
+    name="clave_asig"
+    [(ngModel)]="nuevaAsignatura.clave_asig"
+    [readonly]="editando"
+    required
+  >
+
+  <input
+    type="text"
+    placeholder="Nombre"
+    name="nom_asig"
+    [(ngModel)]="nuevaAsignatura.nom_asig"
+    required
+  >
+
+  <input
+    type="time"
+    name="horas_s"
+    [(ngModel)]="nuevaAsignatura.horas_s"
+  >
+
+  <input
+    type="number"
+    placeholder="Créditos"
+    name="creditos"
+    [(ngModel)]="nuevaAsignatura.creditos"
+  >
+
+  <button type="submit">
+    {{ editando ? 'Guardar cambios' : 'Agregar asignatura' }}
+  </button>
+
+  <button
+    *ngIf="editando"
+    type="button"
+    (click)="cancelarEdicion()"
+  >
+    Cancelar
+  </button>
+
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Clave</th>
+      <th>Asignatura</th>
+      <th>Horas</th>
+      <th>Créditos</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let asignatura of asignaturas">
+
+      <td>{{ asignatura.clave_asig }}</td>
+      <td>{{ asignatura.nom_asig }}</td>
+      <td>{{ asignatura.horas_s }}</td>
+      <td>{{ asignatura.creditos }}</td>
+
+      <td>
+        <button
+          type="button"
+          (click)="editarAsignatura(asignatura)"
+        >
+          Editar
+        </button>
+
+        <button
+          type="button"
+          (click)="eliminarAsignatura(asignatura.clave_asig)"
+        >
+          Eliminar
+        </button>
+      </td>
+
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,154 @@
+<h2>Profesores</h2>
+
+<form
+  class="formulario-profesor"
+  (ngSubmit)="guardarProfesor()"
+>
+
+  <input
+    type="text"
+    placeholder="Núm. institución"
+    name="num_inst"
+    [(ngModel)]="nuevoProfesor.num_inst"
+    [readonly]="editando"
+    required
+  >
+
+  <input
+    type="text"
+    placeholder="Nombre"
+    name="nombre_prof"
+    [(ngModel)]="nuevoProfesor.nombre_prof"
+  >
+
+  <input
+    type="date"
+    name="f_nac_p"
+    [(ngModel)]="nuevoProfesor.f_nac_p"
+  >
+
+  <input
+    type="email"
+    placeholder="Correo"
+    name="correo_p"
+    [(ngModel)]="nuevoProfesor.correo_p"
+  >
+
+  <input
+    type="number"
+    placeholder="Teléfono"
+    name="tel_p"
+    [(ngModel)]="nuevoProfesor.tel_p"
+  >
+
+  <input
+    type="text"
+    placeholder="Núm. empleado"
+    name="num_emp_p"
+    [(ngModel)]="nuevoProfesor.num_emp_p"
+    [readonly]="editando"
+    required
+  >
+
+  <input
+    type="date"
+    name="f_cont_p"
+    [(ngModel)]="nuevoProfesor.f_cont_p"
+  >
+
+  <input
+    type="number"
+    step="0.01"
+    placeholder="Salario"
+    name="salario_prof"
+    [(ngModel)]="nuevoProfesor.salario_prof"
+  >
+
+  <input
+    type="text"
+    placeholder="Grado académico"
+    name="grado_aca"
+    [(ngModel)]="nuevoProfesor.grado_aca"
+  >
+
+  <input
+    type="text"
+    placeholder="Grupo"
+    name="num_g"
+    [(ngModel)]="nuevoProfesor.num_g"
+    [readonly]="editando"
+    required
+  >
+
+  <button type="submit">
+    {{ editando ? 'Guardar cambios' : 'Agregar profesor' }}
+  </button>
+
+  <button
+    *ngIf="editando"
+    type="button"
+    (click)="cancelarEdicion()"
+  >
+    Cancelar
+  </button>
+
+</form>
+
+<div class="tabla-contenedor">
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Institución</th>
+        <th>Nombre</th>
+        <th>Fecha nac.</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Empleado</th>
+        <th>Contratación</th>
+        <th>Salario</th>
+        <th>Grado académico</th>
+        <th>Grupo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let profesor of profesores">
+
+        <td>{{ profesor.num_inst }}</td>
+        <td>{{ profesor.nombre_prof }}</td>
+        <td>{{ profesor.f_nac_p }}</td>
+        <td>{{ profesor.correo_p }}</td>
+        <td>{{ profesor.tel_p }}</td>
+        <td>{{ profesor.num_emp_p }}</td>
+        <td>{{ profesor.f_cont_p }}</td>
+        <td>{{ profesor.salario_prof }}</td>
+        <td>{{ profesor.grado_aca }}</td>
+        <td>{{ profesor.num_g }}</td>
+
+        <td>
+          <button
+            type="button"
+            (click)="editarProfesor(profesor)"
+          >
+            Editar
+          </button>
+
+          <button
+            type="button"
+            (click)="eliminarProfesor(profesor)"
+          >
+            Eliminar
+          </button>
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

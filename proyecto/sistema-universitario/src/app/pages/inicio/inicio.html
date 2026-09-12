@@ -1,0 +1,142 @@
+<div class="dashboard">
+
+  <section class="welcome">
+    <div>
+      <span class="eyebrow">PANEL PRINCIPAL</span>
+
+      <h1>
+        Bienvenido al Sistema Universitario
+      </h1>
+
+      <p>
+        Administra la información académica de la universidad
+        desde un solo lugar.
+      </p>
+    </div>
+  </section>
+
+  <section class="stats">
+
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        ▤
+      </div>
+
+      <div>
+        <span class="stat-label">Asignaturas</span>
+        <strong>{{ totalAsignaturas }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">
+        ▦
+      </div>
+
+      <div>
+        <span class="stat-label">Grupos</span>
+        <strong>{{ totalGrupos }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon purple">
+        ♙
+      </div>
+
+      <div>
+        <span class="stat-label">Profesores</span>
+        <strong>{{ totalProfesores }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        ▣
+      </div>
+
+      <div>
+        <span class="stat-label">Aperturas</span>
+        <strong>{{ totalAperturas }}</strong>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="content-grid">
+
+    <div class="panel">
+
+      <div class="panel-header">
+        <div>
+          <h2>Gestión académica</h2>
+          <p>Accesos rápidos a los módulos del sistema.</p>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+
+        <a routerLink="/aperturas" class="action">
+          <span>▣</span>
+          <div>
+            <strong>Aperturas</strong>
+            <small>Administrar aperturas académicas</small>
+          </div>
+        </a>
+
+        <a routerLink="/asignaturas" class="action">
+          <span>▤</span>
+          <div>
+            <strong>Asignaturas</strong>
+            <small>Consultar y gestionar asignaturas</small>
+          </div>
+        </a>
+
+        <a routerLink="/grupos" class="action">
+          <span>▦</span>
+          <div>
+            <strong>Grupos</strong>
+            <small>Administrar grupos académicos</small>
+          </div>
+        </a>
+
+        <a routerLink="/profesores" class="action">
+          <span>♙</span>
+          <div>
+            <strong>Profesores</strong>
+            <small>Gestionar profesores</small>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="panel system-panel">
+
+      <h2>Estado del sistema</h2>
+
+      <div class="system-status">
+        <span></span>
+
+        <div>
+          <strong>Operativo</strong>
+          <p>Todos los módulos disponibles</p>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <span>Frontend</span>
+        <strong>Angular</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Estado</span>
+        <strong>Activo</strong>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

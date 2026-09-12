@@ -1,0 +1,82 @@
+<h2>Aperturas</h2>
+
+<form
+  class="formulario-apertura"
+  (ngSubmit)="guardarApertura()"
+>
+
+  <input
+    type="text"
+    placeholder="Clave de asignatura"
+    name="clave_asig"
+    [(ngModel)]="nuevaApertura.clave_asig"
+    required
+  >
+
+  <input
+    type="text"
+    placeholder="Número de grupo"
+    name="num_g"
+    [(ngModel)]="nuevaApertura.num_g"
+    required
+  >
+
+  <button type="submit">
+    {{ editando ? 'Guardar cambios' : 'Agregar apertura' }}
+  </button>
+
+  <button
+    *ngIf="editando"
+    type="button"
+    (click)="cancelarEdicion()"
+  >
+    Cancelar
+  </button>
+
+</form>
+
+<table>
+
+  <thead>
+    <tr>
+      <th>Clave asignatura</th>
+      <th>Grupo</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let apertura of aperturas">
+
+      <td>
+        {{ apertura.clave_asig }}
+      </td>
+
+      <td>
+        {{ apertura.num_g }}
+      </td>
+
+      <td>
+
+        <button
+          type="button"
+          (click)="editarApertura(apertura)"
+        >
+          Editar
+        </button>
+
+        <button
+          type="button"
+          (click)="eliminarApertura(apertura)"
+        >
+          Eliminar
+        </button>
+
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>
