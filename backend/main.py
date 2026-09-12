@@ -1,15 +1,31 @@
+import os
+
+import mariadb
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import mariadb
 
-app = FastAPI()
+
+# =====================================================
+# CONFIGURACIÓN GENERAL
+# =====================================================
+
+app = FastAPI(
+    title="Sistema Universitario API",
+    version="1.0.0"
+)
+
+
+# =====================================================
+# CORS
+# =====================================================
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:4200",
-        "http://127.0.0.1:4200"
+        "http://127.0.0.1:4200",
+        "https://sistema-universitario-eight.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -17,25 +33,36 @@ app.add_middleware(
 )
 
 
+# =====================================================
+# CONEXIÓN A MARIADB
+# =====================================================
+
 def obtener_conexion():
     try:
         return mariadb.connect(
-            user="root",
-            password="",
-            host="localhost",
-            port=3306,
-            database="sistema_uni"
+            host=os.getenv("DB_HOST", "localhost"),
+            port=int(os.getenv("DB_PORT", "3306")),
+            user=os.getenv("DB_USER", "root"),
+            password=os.getenv("DB_PASSWORD", ""),
+            database=os.getenv("DB_NAME", "sistema_uni")
         )
+
     except mariadb.Error as error:
         raise HTTPException(
             status_code=500,
-            detail=str(error)
+            detail=f"Error de conexión a MariaDB: {error}"
         )
 
 
+# =====================================================
+# RUTA PRINCIPAL
+# =====================================================
+
 @app.get("/")
 def inicio():
-    return {"mensaje": "Backend conectado a MariaDB"}
+    return {
+        "mensaje": "Backend del Sistema Universitario funcionando"
+    }
 
 
 # =====================================================
@@ -51,6 +78,7 @@ class Asignatura(BaseModel):
 
 @app.get("/asignaturas")
 def obtener_asignaturas():
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -70,6 +98,7 @@ def obtener_asignaturas():
             }
             for fila in cursor.fetchall()
         ]
+
     finally:
         cursor.close()
         conexion.close()
@@ -77,6 +106,7 @@ def obtener_asignaturas():
 
 @app.post("/asignaturas")
 def crear_asignatura(asignatura: Asignatura):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -93,11 +123,19 @@ def crear_asignatura(asignatura: Asignatura):
         ))
 
         conexion.commit()
-        return {"mensaje": "Asignatura agregada correctamente"}
+
+        return {
+            "mensaje": "Asignatura agregada correctamente"
+        }
 
     except mariadb.Error as error:
+
         conexion.rollback()
-        raise HTTPException(status_code=400, detail=str(error))
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -105,7 +143,11 @@ def crear_asignatura(asignatura: Asignatura):
 
 
 @app.put("/asignaturas/{clave}")
-def editar_asignatura(clave: str, asignatura: Asignatura):
+def editar_asignatura(
+    clave: str,
+    asignatura: Asignatura
+):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -131,7 +173,18 @@ def editar_asignatura(clave: str, asignatura: Asignatura):
                 detail="Asignatura no encontrada"
             )
 
-        return {"mensaje": "Asignatura actualizada"}
+        return {
+            "mensaje": "Asignatura actualizada"
+        }
+
+    except mariadb.Error as error:
+
+        conexion.rollback()
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -140,6 +193,7 @@ def editar_asignatura(clave: str, asignatura: Asignatura):
 
 @app.delete("/asignaturas/{clave}")
 def eliminar_asignatura(clave: str):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -147,15 +201,24 @@ def eliminar_asignatura(clave: str):
         cursor.execute("""
             DELETE FROM asignatura
             WHERE clave_asig = ?
-        """, (clave,))
+        """, (
+            clave,
+        ))
 
         conexion.commit()
 
-        return {"mensaje": "Asignatura eliminada"}
+        return {
+            "mensaje": "Asignatura eliminada"
+        }
 
     except mariadb.Error as error:
+
         conexion.rollback()
-        raise HTTPException(status_code=400, detail=str(error))
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -175,6 +238,7 @@ class Grupo(BaseModel):
 
 @app.get("/grupos")
 def obtener_grupos():
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -202,6 +266,7 @@ def obtener_grupos():
 
 @app.post("/grupos")
 def crear_grupo(grupo: Grupo):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -218,11 +283,19 @@ def crear_grupo(grupo: Grupo):
         ))
 
         conexion.commit()
-        return {"mensaje": "Grupo agregado correctamente"}
+
+        return {
+            "mensaje": "Grupo agregado correctamente"
+        }
 
     except mariadb.Error as error:
+
         conexion.rollback()
-        raise HTTPException(status_code=400, detail=str(error))
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -230,7 +303,11 @@ def crear_grupo(grupo: Grupo):
 
 
 @app.put("/grupos/{num_g}")
-def editar_grupo(num_g: str, grupo: Grupo):
+def editar_grupo(
+    num_g: str,
+    grupo: Grupo
+):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -250,7 +327,24 @@ def editar_grupo(num_g: str, grupo: Grupo):
 
         conexion.commit()
 
-        return {"mensaje": "Grupo actualizado"}
+        if cursor.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail="Grupo no encontrado"
+            )
+
+        return {
+            "mensaje": "Grupo actualizado"
+        }
+
+    except mariadb.Error as error:
+
+        conexion.rollback()
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -259,6 +353,7 @@ def editar_grupo(num_g: str, grupo: Grupo):
 
 @app.delete("/grupos/{num_g}")
 def eliminar_grupo(num_g: str):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -266,15 +361,24 @@ def eliminar_grupo(num_g: str):
         cursor.execute("""
             DELETE FROM grupo
             WHERE num_g = ?
-        """, (num_g,))
+        """, (
+            num_g,
+        ))
 
         conexion.commit()
 
-        return {"mensaje": "Grupo eliminado"}
+        return {
+            "mensaje": "Grupo eliminado"
+        }
 
     except mariadb.Error as error:
+
         conexion.rollback()
-        raise HTTPException(status_code=400, detail=str(error))
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -300,6 +404,7 @@ class Profesor(BaseModel):
 
 @app.get("/profesores")
 def obtener_profesores():
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -343,6 +448,7 @@ def obtener_profesores():
 
 @app.post("/profesores")
 def crear_profesor(profesor: Profesor):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -375,11 +481,19 @@ def crear_profesor(profesor: Profesor):
         ))
 
         conexion.commit()
-        return {"mensaje": "Profesor agregado correctamente"}
+
+        return {
+            "mensaje": "Profesor agregado correctamente"
+        }
 
     except mariadb.Error as error:
+
         conexion.rollback()
-        raise HTTPException(status_code=400, detail=str(error))
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -393,6 +507,7 @@ def editar_profesor(
     num_g: str,
     profesor: Profesor
 ):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -424,7 +539,24 @@ def editar_profesor(
 
         conexion.commit()
 
-        return {"mensaje": "Profesor actualizado"}
+        if cursor.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail="Profesor no encontrado"
+            )
+
+        return {
+            "mensaje": "Profesor actualizado"
+        }
+
+    except mariadb.Error as error:
+
+        conexion.rollback()
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -437,6 +569,7 @@ def eliminar_profesor(
     num_emp_p: str,
     num_g: str
 ):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -454,7 +587,18 @@ def eliminar_profesor(
 
         conexion.commit()
 
-        return {"mensaje": "Profesor eliminado"}
+        return {
+            "mensaje": "Profesor eliminado"
+        }
+
+    except mariadb.Error as error:
+
+        conexion.rollback()
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -472,6 +616,7 @@ class Apertura(BaseModel):
 
 @app.get("/aperturas")
 def obtener_aperturas():
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -497,6 +642,7 @@ def obtener_aperturas():
 
 @app.post("/aperturas")
 def crear_apertura(apertura: Apertura):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -512,11 +658,18 @@ def crear_apertura(apertura: Apertura):
 
         conexion.commit()
 
-        return {"mensaje": "Apertura agregada correctamente"}
+        return {
+            "mensaje": "Apertura agregada correctamente"
+        }
 
     except mariadb.Error as error:
+
         conexion.rollback()
-        raise HTTPException(status_code=400, detail=str(error))
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -529,6 +682,7 @@ def editar_apertura(
     num_g: str,
     apertura: Apertura
 ):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -548,11 +702,24 @@ def editar_apertura(
 
         conexion.commit()
 
-        return {"mensaje": "Apertura actualizada"}
+        if cursor.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail="Apertura no encontrada"
+            )
+
+        return {
+            "mensaje": "Apertura actualizada"
+        }
 
     except mariadb.Error as error:
+
         conexion.rollback()
-        raise HTTPException(status_code=400, detail=str(error))
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
@@ -560,7 +727,11 @@ def editar_apertura(
 
 
 @app.delete("/aperturas/{clave}/{num_g}")
-def eliminar_apertura(clave: str, num_g: str):
+def eliminar_apertura(
+    clave: str,
+    num_g: str
+):
+
     conexion = obtener_conexion()
     cursor = conexion.cursor()
 
@@ -576,11 +747,18 @@ def eliminar_apertura(clave: str, num_g: str):
 
         conexion.commit()
 
-        return {"mensaje": "Apertura eliminada"}
+        return {
+            "mensaje": "Apertura eliminada"
+        }
 
     except mariadb.Error as error:
+
         conexion.rollback()
-        raise HTTPException(status_code=400, detail=str(error))
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
 
     finally:
         cursor.close()
